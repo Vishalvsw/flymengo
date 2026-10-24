@@ -1,0 +1,6 @@
+{
+  "name": "Flymego Tours",
+  "description": "Flymego Tours - Premium travel agency & holiday consultancy. Explore domestic & international packages, flight ticketing, and personalized holiday itineraries.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
