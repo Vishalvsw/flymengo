@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
+<<<<<<< HEAD
 import { Plane, Phone, MessageSquare, Menu, X, Compass, ChevronRight, ShieldCheck, Smartphone } from 'lucide-react';
 import { PromoBanner } from './PromoBanner';
 import { PlanMyTripInitialData } from './HolidayEnquiryModal';
 import { useTravel } from '../context/TravelContext';
 import { PWAInstallButton } from './pwa/PWAInstallButton';
+=======
+import { Plane, Phone, MessageSquare, Menu, X, Compass, ChevronRight, ShieldCheck } from 'lucide-react';
+import { PromoBanner } from './PromoBanner';
+import { PlanMyTripInitialData } from './HolidayEnquiryModal';
+import { useTravel } from '../context/TravelContext';
+>>>>>>> 91b3bb62992838a851e7cc51dccb3177ca7ce392
 
 export type ActiveTab = 'home' | 'packages' | 'international' | 'domestic' | 'flights' | 'about' | 'contact' | 'careers';
 
@@ -12,8 +19,11 @@ interface HeaderProps {
   setActiveTab: (tab: ActiveTab) => void;
   onOpenPlanMyTrip: (initialData?: PlanMyTripInitialData) => void;
   onOpenAdmin: () => void;
+<<<<<<< HEAD
   onOpenInstallModal?: () => void;
   isAppInstalled?: boolean;
+=======
+>>>>>>> 91b3bb62992838a851e7cc51dccb3177ca7ce392
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -21,8 +31,11 @@ export const Header: React.FC<HeaderProps> = ({
   setActiveTab,
   onOpenPlanMyTrip,
   onOpenAdmin,
+<<<<<<< HEAD
   onOpenInstallModal,
   isAppInstalled = false,
+=======
+>>>>>>> 91b3bb62992838a851e7cc51dccb3177ca7ce392
 }) => {
   const { brandInfo, isAdminLoggedIn } = useTravel();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -75,6 +88,7 @@ export const Header: React.FC<HeaderProps> = ({
               <ShieldCheck className="w-3.5 h-3.5 text-[#FF7A00]" />
               <span>{isAdminLoggedIn ? 'Admin Panel (Active)' : 'Admin Login'}</span>
             </button>
+<<<<<<< HEAD
             {onOpenInstallModal && !isAppInstalled && (
               <>
                 <span className="text-slate-600">|</span>
@@ -88,6 +102,8 @@ export const Header: React.FC<HeaderProps> = ({
                 </button>
               </>
             )}
+=======
+>>>>>>> 91b3bb62992838a851e7cc51dccb3177ca7ce392
           </div>
         </div>
       </div>
@@ -200,6 +216,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Desktop Right Action */}
           <div className="hidden lg:flex items-center gap-3 shrink-0">
+<<<<<<< HEAD
             {onOpenInstallModal && !isAppInstalled && (
               <PWAInstallButton
                 onClick={onOpenInstallModal}
@@ -208,6 +225,8 @@ export const Header: React.FC<HeaderProps> = ({
               />
             )}
 
+=======
+>>>>>>> 91b3bb62992838a851e7cc51dccb3177ca7ce392
             <a
               href={brandInfo.whatsappUrl}
               target="_blank"
@@ -229,6 +248,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Mobile Right Controls */}
           <div className="flex items-center gap-2 lg:hidden">
+<<<<<<< HEAD
             {onOpenInstallModal && !isAppInstalled && (
               <button
                 onClick={onOpenInstallModal}
@@ -240,6 +260,8 @@ export const Header: React.FC<HeaderProps> = ({
               </button>
             )}
 
+=======
+>>>>>>> 91b3bb62992838a851e7cc51dccb3177ca7ce392
             <a
               href={brandInfo.whatsappUrl}
               target="_blank"
@@ -262,6 +284,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Mobile Dropdown Menu */}
         {mobileMenuOpen && (
+<<<<<<< HEAD
           <div className="lg:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-2 shadow-xl animate-in fade-in slide-in-from-top-2 duration-150">
             {onOpenInstallModal && !isAppInstalled && (
               <div className="pb-1">
@@ -276,6 +299,9 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
             )}
 
+=======
+          <div className="lg:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-6 space-y-2 shadow-xl animate-in fade-in slide-in-from-top-2 duration-150">
+>>>>>>> 91b3bb62992838a851e7cc51dccb3177ca7ce392
             <div className="grid grid-cols-1 gap-1 text-sm font-medium text-slate-700">
               <button
                 onClick={() => handleNavClick('home')}

@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
+<<<<<<< HEAD
 import { Plane, Phone, Mail, MapPin, Clock, MessageSquare, X, ShieldCheck, Smartphone } from 'lucide-react';
+=======
+import { Plane, Phone, Mail, MapPin, Clock, MessageSquare, X, ShieldCheck } from 'lucide-react';
+>>>>>>> 91b3bb62992838a851e7cc51dccb3177ca7ce392
 import { ActiveTab } from './Header';
 import { useTravel } from '../context/TravelContext';
 
@@ -7,10 +11,16 @@ interface FooterProps {
   setActiveTab: (tab: ActiveTab) => void;
   onOpenPlanMyTrip: () => void;
   onOpenAdmin: () => void;
+<<<<<<< HEAD
   onOpenInstallModal?: () => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenPlanMyTrip, onOpenAdmin, onOpenInstallModal }) => {
+=======
+}
+
+export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenPlanMyTrip, onOpenAdmin }) => {
+>>>>>>> 91b3bb62992838a851e7cc51dccb3177ca7ce392
   const { brandInfo } = useTravel();
   const [legalModal, setLegalModal] = useState<'privacy' | 'terms' | null>(null);
 
@@ -108,6 +118,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenPlanMyTrip, 
                   Contact Us
                 </button>
               </li>
+<<<<<<< HEAD
               {onOpenInstallModal && (
                 <li className="pt-1">
                   <button
@@ -119,6 +130,8 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenPlanMyTrip, 
                   </button>
                 </li>
               )}
+=======
+>>>>>>> 91b3bb62992838a851e7cc51dccb3177ca7ce392
             </ul>
           </div>
 

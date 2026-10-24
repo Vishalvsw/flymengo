@@ -21,10 +21,13 @@ import { MessageSquare, Compass, ShieldCheck } from 'lucide-react';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { AdminLoginModal } from './components/admin/AdminLoginModal';
 import { useTravel } from './context/TravelContext';
+<<<<<<< HEAD
 import { usePWAInstall } from './hooks/usePWAInstall';
 import { PWAInstallModal } from './components/pwa/PWAInstallModal';
 import { PWAInstallButton } from './components/pwa/PWAInstallButton';
 import { OfflineIndicator } from './components/pwa/OfflineIndicator';
+=======
+>>>>>>> 91b3bb62992838a851e7cc51dccb3177ca7ce392
 
 export default function App() {
   const { brandInfo, isAdminLoggedIn } = useTravel();
@@ -38,6 +41,7 @@ export default function App() {
   const [isAdminView, setIsAdminView] = useState(false);
   const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState(false);
 
+<<<<<<< HEAD
   // PWA Install state
   const {
     isInstallable,
@@ -49,6 +53,8 @@ export default function App() {
   } = usePWAInstall();
   const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
 
+=======
+>>>>>>> 91b3bb62992838a851e7cc51dccb3177ca7ce392
   const handleOpenPlanMyTrip = (initialData?: PlanMyTripInitialData) => {
     setPlanMyTripData(initialData);
     setIsPlanMyTripOpen(true);
@@ -93,14 +99,21 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F8FAFC] text-slate-800 font-sans selection:bg-[#FF6B00] selection:text-white">
+<<<<<<< HEAD
       {/* Sticky Header with Navigation, Branding, and PWA Install */}
+=======
+      {/* Sticky Header with Navigation and Branding */}
+>>>>>>> 91b3bb62992838a851e7cc51dccb3177ca7ce392
       <Header
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onOpenPlanMyTrip={handleOpenPlanMyTrip}
         onOpenAdmin={handleOpenAdmin}
+<<<<<<< HEAD
         onOpenInstallModal={() => setIsInstallModalOpen(true)}
         isAppInstalled={isInstalled}
+=======
+>>>>>>> 91b3bb62992838a851e7cc51dccb3177ca7ce392
       />
 
       {/* Main Content Router */}
@@ -254,6 +267,7 @@ export default function App() {
         {activeTab === 'contact' && <ContactView />}
       </main>
 
+<<<<<<< HEAD
       {/* Floating Action Button (WhatsApp Quick Desk, Install App APK & Admin indicator) */}
       <aside aria-label="Quick contact" className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2.5">
         {!isInstalled && (
@@ -264,6 +278,10 @@ export default function App() {
           />
         )}
 
+=======
+      {/* Floating Action Button (WhatsApp Quick Desk & Admin indicator) */}
+      <aside aria-label="Quick contact" className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2.5">
+>>>>>>> 91b3bb62992838a851e7cc51dccb3177ca7ce392
         <a
           href={brandInfo.whatsappUrl}
           target="_blank"
@@ -302,7 +320,10 @@ export default function App() {
         setActiveTab={setActiveTab}
         onOpenPlanMyTrip={() => handleOpenPlanMyTrip()}
         onOpenAdmin={handleOpenAdmin}
+<<<<<<< HEAD
         onOpenInstallModal={() => setIsInstallModalOpen(true)}
+=======
+>>>>>>> 91b3bb62992838a851e7cc51dccb3177ca7ce392
       />
 
       {/* Modals */}
@@ -335,6 +356,7 @@ export default function App() {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
       />
+<<<<<<< HEAD
 
       {/* PWA Mobile App / APK Installation Modal */}
       <PWAInstallModal
@@ -349,6 +371,8 @@ export default function App() {
 
       {/* Network Connectivity Status Indicator */}
       <OfflineIndicator isOnline={isOnline} />
+=======
+>>>>>>> 91b3bb62992838a851e7cc51dccb3177ca7ce392
     </div>
   );
 }
