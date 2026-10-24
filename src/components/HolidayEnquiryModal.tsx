@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, CheckCircle2, Compass, MapPin, Calendar, Users, Shield, Send, Sparkles, MessageSquare } from 'lucide-react';
 import { BRAND_INFO } from '../data/travelData';
+import { useTravel } from '../context/TravelContext';
 
 export interface PlanMyTripInitialData {
   destination?: string;
@@ -20,6 +21,7 @@ export const HolidayEnquiryModal: React.FC<HolidayEnquiryModalProps> = ({
   onClose,
   initialData,
 }) => {
+  const { addHolidayEnquiry } = useTravel();
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -48,6 +50,20 @@ export const HolidayEnquiryModal: React.FC<HolidayEnquiryModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const ref = 'FMT-' + Math.floor(100000 + Math.random() * 900000);
+    addHolidayEnquiry({
+      referenceId: ref,
+      fullName,
+      phone,
+      email,
+      destination,
+      departureCity,
+      travelDate: travelDate || 'Flexible',
+      adults,
+      children,
+      budgetRange,
+      travelPreference,
+      additionalNotes,
+    });
     setEnquiryRef(ref);
     setSubmitted(true);
   };

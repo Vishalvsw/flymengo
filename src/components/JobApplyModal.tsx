@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, UploadCloud, CheckCircle2, Briefcase, FileText, Sparkles } from 'lucide-react';
 import { JobPosition, BRAND_INFO } from '../data/travelData';
+import { useTravel } from '../context/TravelContext';
 
 interface JobApplyModalProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ export const JobApplyModal: React.FC<JobApplyModalProps> = ({
   onClose,
   selectedJob,
 }) => {
+  const { addJobApplication } = useTravel();
   const [candidateName, setCandidateName] = useState('');
   const [candidatePhone, setCandidatePhone] = useState('');
   const [candidateEmail, setCandidateEmail] = useState('');
@@ -39,6 +41,15 @@ export const JobApplyModal: React.FC<JobApplyModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    addJobApplication({
+      candidateName,
+      candidatePhone,
+      candidateEmail,
+      position,
+      experience: experience || 'Fresher / Under Review',
+      qualification: qualification || 'Relevant Background',
+      fileName: fileName || undefined,
+    });
     setSubmitted(true);
   };
 

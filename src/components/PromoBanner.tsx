@@ -1,97 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { Tag, Sparkles, Clock, ArrowRight, ChevronLeft, ChevronRight, X, Flame } from 'lucide-react';
 import { PlanMyTripInitialData } from './HolidayEnquiryModal';
-
-interface PromoOffer {
-  id: string;
-  badge: string;
-  text: string;
-  highlight: string;
-  expiresText: string;
-  destination: string;
-  offerNote: string;
-}
-
-const PROMO_OFFERS: PromoOffer[] = [
-  {
-    id: 'dubai-super-saver',
-    badge: 'FLASH SALE',
-    highlight: 'Dubai Super Saver:',
-    text: 'Flat ₹5,000 Off on 5D/4N Packages + Free Desert Safari BBQ Upgrade',
-    expiresText: 'Limited 12 slots remaining this week',
-    destination: 'Dubai',
-    offerNote: '[FLASH SALE] Dubai Super Saver - Flat ₹5,000 Off & Free Desert Safari Upgrade',
-  },
-  {
-    id: 'bali-honeymoon',
-    badge: 'HONEYMOON SPECIAL',
-    highlight: 'Bali Island Escape:',
-    text: 'Complimentary Floating Breakfast & Nusa Penida Island Speedboat Tour',
-    expiresText: 'Valid for bookings made this month',
-    destination: 'Bali',
-    offerNote: '[SEASONAL OFFER] Bali Honeymoon Special - Free Floating Breakfast & Nusa Penida Tour',
-  },
-  {
-    id: 'kashmir-snow',
-    badge: 'EARLY BIRD',
-    highlight: 'Kashmir Paradise:',
-    text: 'Free Dal Lake Shikara Sunset Ride & Gulmarg Gondola Priority Assistance',
-    expiresText: 'Winter season special offer',
-    destination: 'Kashmir',
-    offerNote: '[EARLY BIRD] Kashmir Snow Special - Free Dal Lake Shikara Ride',
-  },
-  {
-    id: 'maldives-luxury',
-    badge: 'LUXURY RETREAT',
-    highlight: 'Maldives Overwater:',
-    text: 'Save up to 15% on All-Inclusive Water Bungalows with Speedboat Transfers',
-    expiresText: 'Ends Sunday midnight',
-    destination: 'Maldives',
-    offerNote: '[LUXURY DISCOUNT] Maldives Overwater Villa 15% Seasonal Discount',
-  },
-  {
-    id: 'zero-convenience-fee',
-    badge: 'FLIGHT DESK',
-    highlight: 'Zero Convenience Fee:',
-    text: 'Exclusive airline fare desks for Gulf & South East Asia Round-Trips',
-    expiresText: 'Today only special',
-    destination: 'Other International',
-    offerNote: '[PROMO] Flight Desk Zero Convenience Fee Special Fare Request',
-  },
-];
+import { useTravel } from '../context/TravelContext';
 
 interface PromoBannerProps {
   onClaimOffer: (initialData: PlanMyTripInitialData) => void;
 }
 
 export const PromoBanner: React.FC<PromoBannerProps> = ({ onClaimOffer }) => {
+  const { promoOffers } = useTravel();
+  const activeOffers = promoOffers.filter((p) => p.active);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
   // Auto-rotate every 4.5 seconds unless paused by mouse hover
   useEffect(() => {
-    if (isPaused || !isVisible) return;
+    if (isPaused || !isVisible || activeOffers.length <= 1) return;
 
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % PROMO_OFFERS.length);
+      setCurrentIndex((prev) => (prev + 1) % activeOffers.length);
     }, 4500);
 
     return () => clearInterval(interval);
-  }, [isPaused, isVisible]);
+  }, [isPaused, isVisible, activeOffers.length]);
 
-  if (!isVisible) return null;
+  if (!isVisible || activeOffers.length === 0) return null;
 
-  const currentOffer = PROMO_OFFERS[currentIndex];
+  const safeIndex = currentIndex % activeOffers.length;
+  const currentOffer = activeOffers[safeIndex];
 
   const handlePrev = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setCurrentIndex((prev) => (prev - 1 + PROMO_OFFERS.length) % PROMO_OFFERS.length);
+    setCurrentIndex((prev) => (prev - 1 + activeOffers.length) % activeOffers.length);
   };
 
   const handleNext = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setCurrentIndex((prev) => (prev + 1) % PROMO_OFFERS.length);
+    setCurrentIndex((prev) => (prev + 1) % activeOffers.length);
   };
 
   const handleClaim = () => {
@@ -111,13 +58,15 @@ export const PromoBanner: React.FC<PromoBannerProps> = ({ onClaimOffer }) => {
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4 min-h-[30px]">
         {/* Left: Navigation arrow (desktop) */}
-        <button
-          onClick={handlePrev}
-          aria-label="Previous promotional offer"
-          className="hidden md:flex p-1 rounded-md hover:bg-black/15 active:bg-black/25 text-white/90 hover:text-white transition-colors shrink-0"
-        >
-          <ChevronLeft className="w-3.5 h-3.5" />
-        </button>
+        {activeOffers.length > 1 && (
+          <button
+            onClick={handlePrev}
+            aria-label="Previous promotional offer"
+            className="hidden md:flex p-1 rounded-md hover:bg-black/15 active:bg-black/25 text-white/90 hover:text-white transition-colors shrink-0"
+          >
+            <ChevronLeft className="w-3.5 h-3.5" />
+          </button>
+        )}
 
         {/* Center: Rotating Offer Content */}
         <div
@@ -153,25 +102,29 @@ export const PromoBanner: React.FC<PromoBannerProps> = ({ onClaimOffer }) => {
 
         {/* Right Controls: Next arrow, Dots, and Dismiss button */}
         <div className="flex items-center gap-1 shrink-0">
-          <button
-            onClick={handleNext}
-            aria-label="Next promotional offer"
-            className="hidden md:flex p-1 rounded-md hover:bg-black/15 active:bg-black/25 text-white/90 hover:text-white transition-colors"
-          >
-            <ChevronRight className="w-3.5 h-3.5" />
-          </button>
+          {activeOffers.length > 1 && (
+            <button
+              onClick={handleNext}
+              aria-label="Next promotional offer"
+              className="hidden md:flex p-1 rounded-md hover:bg-black/15 active:bg-black/25 text-white/90 hover:text-white transition-colors"
+            >
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          )}
 
           {/* Rotating dots indicator */}
-          <div className="hidden sm:flex items-center gap-1 mx-1.5" aria-hidden="true">
-            {PROMO_OFFERS.map((_, idx) => (
-              <span
-                key={idx}
-                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                  idx === currentIndex ? 'bg-white scale-110 w-3' : 'bg-white/40'
-                }`}
-              />
-            ))}
-          </div>
+          {activeOffers.length > 1 && (
+            <div className="hidden sm:flex items-center gap-1 mx-1.5" aria-hidden="true">
+              {activeOffers.map((_, idx) => (
+                <span
+                  key={idx}
+                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                    idx === safeIndex ? 'bg-white scale-110 w-3' : 'bg-white/40'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
 
           {/* Dismiss button */}
           <button

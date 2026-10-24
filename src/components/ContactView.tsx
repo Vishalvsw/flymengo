@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Phone, Mail, MapPin, Clock, MessageSquare, Send, CheckCircle2, Sparkles } from 'lucide-react';
-import { BRAND_INFO } from '../data/travelData';
+import { useTravel } from '../context/TravelContext';
 
 export const ContactView: React.FC = () => {
+  const { brandInfo, addHolidayEnquiry } = useTravel();
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -14,6 +15,21 @@ export const ContactView: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const ref = 'FMT-MSG-' + Math.floor(1000 + Math.random() * 9000);
+    addHolidayEnquiry({
+      referenceId: ref,
+      fullName: formData.name,
+      phone: formData.phone,
+      email: formData.email,
+      destination: formData.subject,
+      departureCity: 'Via Contact Form',
+      travelDate: 'To be discussed',
+      adults: '1',
+      children: '0',
+      budgetRange: 'Flexible',
+      travelPreference: 'Direct Inquiry',
+      additionalNotes: formData.message,
+    });
     setSubmitted(true);
   };
 
@@ -55,10 +71,10 @@ export const ContactView: React.FC = () => {
                       Phone Number
                     </span>
                     <a
-                      href={`tel:${BRAND_INFO.phoneRaw}`}
+                      href={`tel:${brandInfo.phoneRaw}`}
                       className="text-base font-bold text-white hover:text-[#FF7A00] transition-colors"
                     >
-                      {BRAND_INFO.phone}
+                      {brandInfo.phone}
                     </a>
                     <p className="text-[11px] text-slate-400 mt-0.5">Call for instant holiday & ticketing advisory</p>
                   </div>
@@ -74,10 +90,10 @@ export const ContactView: React.FC = () => {
                       Email Address
                     </span>
                     <a
-                      href={`mailto:${BRAND_INFO.email}`}
+                      href={`mailto:${brandInfo.email}`}
                       className="text-base font-bold text-white hover:text-[#FF7A00] transition-colors"
                     >
-                      {BRAND_INFO.email}
+                      {brandInfo.email}
                     </a>
                     <p className="text-[11px] text-slate-400 mt-0.5">Send custom itinerary requests & group RFPs</p>
                   </div>
@@ -93,12 +109,12 @@ export const ContactView: React.FC = () => {
                       WhatsApp Quick Desk
                     </span>
                     <a
-                      href={BRAND_INFO.whatsappUrl}
+                      href={brandInfo.whatsappUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 font-bold text-emerald-400 hover:text-emerald-300 transition-colors"
                     >
-                      <span>Chat on WhatsApp ({BRAND_INFO.phone})</span>
+                      <span>Chat on WhatsApp ({brandInfo.phone})</span>
                     </a>
                     <p className="text-[11px] text-slate-400 mt-0.5">Fastest response for travel itineraries</p>
                   </div>
@@ -114,7 +130,7 @@ export const ContactView: React.FC = () => {
                       Office Address (Placeholder)
                     </span>
                     <p className="text-xs text-slate-200 leading-relaxed font-medium">
-                      {BRAND_INFO.officeAddress}
+                      {brandInfo.officeAddress}
                     </p>
                   </div>
                 </div>
@@ -129,7 +145,7 @@ export const ContactView: React.FC = () => {
                       Business Hours
                     </span>
                     <p className="text-xs text-slate-200 font-medium">
-                      {BRAND_INFO.businessHours}
+                      {brandInfo.businessHours}
                     </p>
                   </div>
                 </div>

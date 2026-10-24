@@ -16,15 +16,23 @@ import { HolidayEnquiryModal, PlanMyTripInitialData } from './components/Holiday
 import { DestinationDetailModal } from './components/DestinationDetailModal';
 import { PackageDetailModal } from './components/PackageDetailModal';
 import { Footer } from './components/Footer';
-import { Destination, HolidayPackage, BRAND_INFO } from './data/travelData';
-import { MessageSquare, Phone, Compass, ArrowUp } from 'lucide-react';
+import { Destination, HolidayPackage } from './data/travelData';
+import { MessageSquare, Compass, ShieldCheck } from 'lucide-react';
+import { AdminDashboard } from './components/admin/AdminDashboard';
+import { AdminLoginModal } from './components/admin/AdminLoginModal';
+import { useTravel } from './context/TravelContext';
 
 export default function App() {
+  const { brandInfo, isAdminLoggedIn } = useTravel();
   const [activeTab, setActiveTab] = useState<ActiveTab>('home');
   const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
   const [selectedPackage, setSelectedPackage] = useState<HolidayPackage | null>(null);
   const [isPlanMyTripOpen, setIsPlanMyTripOpen] = useState(false);
   const [planMyTripData, setPlanMyTripData] = useState<PlanMyTripInitialData | undefined>(undefined);
+
+  // Admin View & Modal states
+  const [isAdminView, setIsAdminView] = useState(false);
+  const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState(false);
 
   const handleOpenPlanMyTrip = (initialData?: PlanMyTripInitialData) => {
     setPlanMyTripData(initialData);
@@ -47,6 +55,27 @@ export default function App() {
     handleOpenPlanMyTrip({ packageName });
   };
 
+  const handleOpenAdmin = () => {
+    if (isAdminLoggedIn) {
+      setIsAdminView(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      setIsAdminLoginModalOpen(true);
+    }
+  };
+
+  // If Admin View is active, render the dedicated Admin Dashboard
+  if (isAdminView) {
+    return (
+      <AdminDashboard
+        onExitToStorefront={() => {
+          setIsAdminView(false);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-[#F8FAFC] text-slate-800 font-sans selection:bg-[#FF6B00] selection:text-white">
       {/* Sticky Header with Navigation and Branding */}
@@ -54,6 +83,7 @@ export default function App() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onOpenPlanMyTrip={handleOpenPlanMyTrip}
+        onOpenAdmin={handleOpenAdmin}
       />
 
       {/* Main Content Router */}
@@ -207,10 +237,10 @@ export default function App() {
         {activeTab === 'contact' && <ContactView />}
       </main>
 
-      {/* Floating Action Button (WhatsApp Quick Desk) */}
+      {/* Floating Action Button (WhatsApp Quick Desk & Admin indicator) */}
       <aside aria-label="Quick contact" className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2.5">
         <a
-          href={BRAND_INFO.whatsappUrl}
+          href={brandInfo.whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="group flex items-center gap-2 px-4 py-3 rounded-full bg-emerald-500 text-white shadow-xl hover:bg-emerald-600 hover:shadow-2xl transition-all transform hover:scale-105"
@@ -222,19 +252,31 @@ export default function App() {
           </span>
         </a>
 
-        <button
-          onClick={() => handleOpenPlanMyTrip()}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#0B1B3D] text-white shadow-lg hover:bg-[#1E3A8A] transition-all text-xs font-bold border border-white/10"
-        >
-          <Compass className="w-4 h-4 text-[#FF7A00]" />
-          <span className="hidden sm:inline">Plan My Trip</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleOpenAdmin}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-slate-900/90 text-amber-300 shadow-lg hover:bg-black transition-all text-xs font-bold border border-amber-400/30 backdrop-blur-xs"
+            title="Open Admin Management Panel"
+          >
+            <ShieldCheck className="w-3.5 h-3.5 text-[#FF7A00]" />
+            <span className="hidden sm:inline">{isAdminLoggedIn ? 'Admin Panel' : 'Admin'}</span>
+          </button>
+
+          <button
+            onClick={() => handleOpenPlanMyTrip()}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#0B1B3D] text-white shadow-lg hover:bg-[#1E3A8A] transition-all text-xs font-bold border border-white/10"
+          >
+            <Compass className="w-4 h-4 text-[#FF7A00]" />
+            <span className="hidden sm:inline">Plan My Trip</span>
+          </button>
+        </div>
       </aside>
 
       {/* Footer */}
       <Footer
         setActiveTab={setActiveTab}
         onOpenPlanMyTrip={() => handleOpenPlanMyTrip()}
+        onOpenAdmin={handleOpenAdmin}
       />
 
       {/* Modals */}
@@ -256,6 +298,16 @@ export default function App() {
         isOpen={Boolean(selectedPackage)}
         onClose={() => setSelectedPackage(null)}
         onRequestPackageQuote={handleRequestPackageQuote}
+      />
+
+      {/* Admin Login Modal */}
+      <AdminLoginModal
+        isOpen={isAdminLoginModalOpen}
+        onClose={() => setIsAdminLoginModalOpen(false)}
+        onLoginSuccess={() => {
+          setIsAdminView(true);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
       />
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { MapPin, ArrowRight, Sparkles, Clock, Calendar, CheckCircle2 } from 'lucide-react';
-import { Destination, FEATURED_DESTINATIONS } from '../data/travelData';
+import { Destination } from '../data/travelData';
+import { useTravel } from '../context/TravelContext';
 
 interface DestinationsSectionProps {
   onSelectDestination: (dest: Destination) => void;
@@ -11,9 +12,10 @@ export const DestinationsSection: React.FC<DestinationsSectionProps> = ({
   onSelectDestination,
   onRequestQuote,
 }) => {
+  const { destinations } = useTravel();
   const [filter, setFilter] = useState<'All' | 'International' | 'Domestic'>('All');
 
-  const filteredDestinations = FEATURED_DESTINATIONS.filter((item) => {
+  const filteredDestinations = destinations.filter((item) => {
     if (filter === 'All') return true;
     return item.type === filter;
   });
@@ -46,7 +48,7 @@ export const DestinationsSection: React.FC<DestinationsSectionProps> = ({
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              All Destinations ({FEATURED_DESTINATIONS.length})
+              All Destinations ({destinations.length})
             </button>
             <button
               onClick={() => setFilter('International')}

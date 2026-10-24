@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Clock, Check, Sparkles, ArrowRight, ShieldCheck, Tag } from 'lucide-react';
-import { HolidayPackage, HOLIDAY_PACKAGES } from '../data/travelData';
+import { HolidayPackage } from '../data/travelData';
+import { useTravel } from '../context/TravelContext';
 
 interface PackagesSectionProps {
   onSelectPackage: (pkg: HolidayPackage) => void;
@@ -13,10 +14,11 @@ export const PackagesSection: React.FC<PackagesSectionProps> = ({
   onRequestPackageQuote,
   filterType = 'All',
 }) => {
+  const { packages } = useTravel();
   const [activeFilter, setActiveFilter] = useState<'All' | 'International' | 'Domestic'>(filterType);
   const [categoryFilter, setCategoryFilter] = useState<string>('All');
 
-  const filteredPackages = HOLIDAY_PACKAGES.filter((pkg) => {
+  const filteredPackages = packages.filter((pkg) => {
     if (activeFilter !== 'All' && pkg.type !== activeFilter) return false;
     if (categoryFilter !== 'All' && pkg.category !== categoryFilter) return false;
     return true;

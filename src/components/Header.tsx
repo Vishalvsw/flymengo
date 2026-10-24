@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Plane, Phone, MessageSquare, Menu, X, Compass, ChevronRight } from 'lucide-react';
-import { BRAND_INFO } from '../data/travelData';
+import { Plane, Phone, MessageSquare, Menu, X, Compass, ChevronRight, ShieldCheck } from 'lucide-react';
 import { PromoBanner } from './PromoBanner';
 import { PlanMyTripInitialData } from './HolidayEnquiryModal';
+import { useTravel } from '../context/TravelContext';
 
 export type ActiveTab = 'home' | 'packages' | 'international' | 'domestic' | 'flights' | 'about' | 'contact' | 'careers';
 
@@ -10,13 +10,16 @@ interface HeaderProps {
   activeTab: ActiveTab;
   setActiveTab: (tab: ActiveTab) => void;
   onOpenPlanMyTrip: (initialData?: PlanMyTripInitialData) => void;
+  onOpenAdmin: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   activeTab,
   setActiveTab,
   onOpenPlanMyTrip,
+  onOpenAdmin,
 }) => {
+  const { brandInfo, isAdminLoggedIn } = useTravel();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleNavClick = (tab: ActiveTab) => {
@@ -35,21 +38,22 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-1.5 text-slate-300">
-              <span className="text-[#FF7A00] font-semibold">Flymego Tours:</span> Explore • Travel • Create Memories
+              <span className="text-[#FF7A00] font-semibold">{brandInfo.name}:</span> {brandInfo.tagline}
             </span>
             <span className="text-slate-600">|</span>
             <span className="text-slate-400">Domestic & International Holiday Consultancy</span>
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
             <a
-              href={`tel:${BRAND_INFO.phoneRaw}`}
+              href={`tel:${brandInfo.phoneRaw}`}
               className="flex items-center gap-1.5 hover:text-white transition-colors"
             >
               <Phone className="w-3.5 h-3.5 text-[#FF7A00]" />
-              <span>{BRAND_INFO.phone}</span>
+              <span>{brandInfo.phone}</span>
             </a>
+            <span className="text-slate-600">|</span>
             <a
-              href={BRAND_INFO.whatsappUrl}
+              href={brandInfo.whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 text-emerald-400 hover:text-emerald-300 transition-colors font-medium"
@@ -57,6 +61,15 @@ export const Header: React.FC<HeaderProps> = ({
               <MessageSquare className="w-3.5 h-3.5" />
               <span>WhatsApp Quick Chat</span>
             </a>
+            <span className="text-slate-600">|</span>
+            <button
+              onClick={onOpenAdmin}
+              className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[11px] font-bold text-amber-300 hover:text-amber-100 bg-white/10 hover:bg-white/15 transition-colors border border-amber-400/30"
+              title="Open Admin Management Panel"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-[#FF7A00]" />
+              <span>{isAdminLoggedIn ? 'Admin Panel (Active)' : 'Admin Login'}</span>
+            </button>
           </div>
         </div>
       </div>
@@ -170,7 +183,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Desktop Right Action */}
           <div className="hidden lg:flex items-center gap-3 shrink-0">
             <a
-              href={BRAND_INFO.whatsappUrl}
+              href={brandInfo.whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200/60 rounded-lg hover:bg-emerald-100 transition-colors"
@@ -191,7 +204,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Mobile Right Controls */}
           <div className="flex items-center gap-2 lg:hidden">
             <a
-              href={BRAND_INFO.whatsappUrl}
+              href={brandInfo.whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 text-emerald-600 bg-emerald-50 rounded-lg border border-emerald-200/50"
@@ -286,6 +299,20 @@ export const Header: React.FC<HeaderProps> = ({
                 <span>Contact Us</span>
                 <ChevronRight className="w-4 h-4 text-slate-400" />
               </button>
+
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenAdmin();
+                }}
+                className="w-full text-left px-3 py-2.5 rounded-lg flex items-center justify-between text-xs font-bold text-amber-800 bg-amber-50 border border-amber-200 mt-2"
+              >
+                <span className="flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-[#FF7A00]" />
+                  <span>Admin Management Portal</span>
+                </span>
+                <ChevronRight className="w-4 h-4" />
+              </button>
             </div>
 
             <div className="pt-3 border-t border-slate-100 flex flex-col gap-2.5">
@@ -299,11 +326,11 @@ export const Header: React.FC<HeaderProps> = ({
                 Plan My Trip (Free Quote)
               </button>
               <a
-                href={`tel:${BRAND_INFO.phoneRaw}`}
+                href={`tel:${brandInfo.phoneRaw}`}
                 className="flex items-center justify-center gap-2 py-2.5 text-xs font-semibold text-slate-700 bg-slate-100 rounded-lg"
               >
                 <Phone className="w-3.5 h-3.5 text-[#0B1B3D]" />
-                <span>Call {BRAND_INFO.phone}</span>
+                <span>Call {brandInfo.phone}</span>
               </a>
             </div>
           </div>

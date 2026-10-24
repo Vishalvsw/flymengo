@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { Plane, Phone, Mail, MapPin, Clock, MessageSquare, X } from 'lucide-react';
-import { BRAND_INFO } from '../data/travelData';
+import { Plane, Phone, Mail, MapPin, Clock, MessageSquare, X, ShieldCheck } from 'lucide-react';
 import { ActiveTab } from './Header';
+import { useTravel } from '../context/TravelContext';
 
 interface FooterProps {
   setActiveTab: (tab: ActiveTab) => void;
   onOpenPlanMyTrip: () => void;
+  onOpenAdmin: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenPlanMyTrip }) => {
+export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenPlanMyTrip, onOpenAdmin }) => {
+  const { brandInfo } = useTravel();
   const [legalModal, setLegalModal] = useState<'privacy' | 'terms' | null>(null);
 
   const handleNav = (tab: ActiveTab) => {
@@ -32,18 +34,18 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenPlanMyTrip }
                   <span className="font-display text-xl font-bold text-[#FF7A00] ml-1">TOURS</span>
                 </div>
                 <p className="text-[10px] uppercase tracking-wider font-semibold text-slate-400">
-                  Explore • Travel • Create Memories
+                  {brandInfo.tagline}
                 </p>
               </div>
             </div>
 
             <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
-              A premier holiday consultancy brand assisting travellers with personalized domestic and international tour packages, flight ticketing, and stress-free holiday planning.
+              {brandInfo.positioning}
             </p>
 
             <div className="pt-2 flex items-center gap-3">
               <a
-                href={BRAND_INFO.whatsappUrl}
+                href={brandInfo.whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-xl bg-white/5 hover:bg-emerald-600 text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-white/10"
@@ -52,14 +54,14 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenPlanMyTrip }
                 <MessageSquare className="w-4 h-4" />
               </a>
               <a
-                href={`tel:${BRAND_INFO.phoneRaw}`}
+                href={`tel:${brandInfo.phoneRaw}`}
                 className="w-9 h-9 rounded-xl bg-white/5 hover:bg-[#FF6B00] text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-white/10"
                 title="Call Flymego Tours"
               >
                 <Phone className="w-4 h-4" />
               </a>
               <a
-                href={`mailto:${BRAND_INFO.email}`}
+                href={`mailto:${brandInfo.email}`}
                 className="w-9 h-9 rounded-xl bg-white/5 hover:bg-blue-600 text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-white/10"
                 title="Email Us"
               >
@@ -155,23 +157,23 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenPlanMyTrip }
             <ul className="space-y-3 text-xs text-slate-400">
               <li className="flex items-start gap-2.5">
                 <Phone className="w-4 h-4 text-[#FF7A00] shrink-0 mt-0.5" />
-                <a href={`tel:${BRAND_INFO.phoneRaw}`} className="hover:text-white transition-colors">
-                  {BRAND_INFO.phone}
+                <a href={`tel:${brandInfo.phoneRaw}`} className="hover:text-white transition-colors">
+                  {brandInfo.phone}
                 </a>
               </li>
               <li className="flex items-start gap-2.5">
                 <Mail className="w-4 h-4 text-[#FF7A00] shrink-0 mt-0.5" />
-                <a href={`mailto:${BRAND_INFO.email}`} className="hover:text-white transition-colors">
-                  {BRAND_INFO.email}
+                <a href={`mailto:${brandInfo.email}`} className="hover:text-white transition-colors">
+                  {brandInfo.email}
                 </a>
               </li>
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-[#FF7A00] shrink-0 mt-0.5" />
-                <span>Commercial Plaza, MG Road, Bengaluru, India</span>
+                <span>{brandInfo.officeAddress}</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <Clock className="w-4 h-4 text-[#FF7A00] shrink-0 mt-0.5" />
-                <span>Mon – Sat: 9:30 AM – 7:30 PM</span>
+                <span>{brandInfo.businessHours}</span>
               </li>
             </ul>
           </div>
@@ -180,10 +182,10 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenPlanMyTrip }
         {/* Bottom bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div>
-            © {new Date().getFullYear()} Flymego Tours. All rights reserved. Travel & Holiday Consultancy.
+            © {new Date().getFullYear()} {brandInfo.name}. All rights reserved. Travel & Holiday Consultancy.
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center gap-6">
             <button
               onClick={() => setLegalModal('privacy')}
               className="hover:text-slate-300 transition-colors"
@@ -203,6 +205,14 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenPlanMyTrip }
               className="text-[#FF7A00] hover:underline font-semibold"
             >
               Request Free Quote
+            </button>
+            <span className="text-slate-700">·</span>
+            <button
+              onClick={onOpenAdmin}
+              className="text-amber-300 hover:text-amber-100 font-bold transition-colors flex items-center gap-1"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-[#FF7A00]" />
+              <span>Admin Portal</span>
             </button>
           </div>
         </div>
@@ -227,22 +237,22 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenPlanMyTrip }
               {legalModal === 'privacy' ? (
                 <>
                   <p>
-                    <strong>Flymego Tours</strong> respects your privacy and is committed to protecting your personal information.
+                    <strong>{brandInfo.name}</strong> respects your privacy and is committed to protecting your personal information.
                   </p>
                   <p>
-                    <strong>Information Collection:</strong> We collect contact details (such as full name, telephone number, email address, and destination preferences) exclusively to furnish customized travel itineraries, flight quotes, and holiday consulting services.
+                    <strong>Information Collection:</strong> We collect contact details exclusively to furnish customized travel itineraries, flight quotes, and holiday consulting services.
                   </p>
                   <p>
                     <strong>Data Confidentiality:</strong> Your information is never sold, leased, or disclosed to third-party marketing companies. It is utilized strictly by our appointed holiday consultants and airline/hotel partners to coordinate your holiday reservations.
                   </p>
                   <p>
-                    For inquiries regarding your personal data, reach out to <strong>{BRAND_INFO.email}</strong>.
+                    For inquiries regarding your personal data, reach out to <strong>{brandInfo.email}</strong>.
                   </p>
                 </>
               ) : (
                 <>
                   <p>
-                    <strong>Service Nature:</strong> Flymego Tours functions as a professional travel agency and holiday consultancy. All package descriptions and prices displayed are demonstrative and subject to seasonal flight tariffs, room availability, and government taxes.
+                    <strong>Service Nature:</strong> {brandInfo.name} functions as a professional travel agency and holiday consultancy. All package descriptions and prices displayed are demonstrative and subject to seasonal flight tariffs, room availability, and government taxes.
                   </p>
                   <p>
                     <strong>Itinerary Customization:</strong> Final bookings and binding itineraries are confirmed only upon mutual agreement with our travel consultants and issuance of official travel vouchers.

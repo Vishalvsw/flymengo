@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Plane, Calendar, Users, ArrowRightLeft, Send, CheckCircle2, Info, Sparkles, Shield, Clock, Phone } from 'lucide-react';
 import { BRAND_INFO } from '../data/travelData';
+import { useTravel } from '../context/TravelContext';
 
 export const FlightTicketingView: React.FC = () => {
+  const { addFlightEnquiry } = useTravel();
   const [tripType, setTripType] = useState<'round-trip' | 'one-way'>('round-trip');
   const [fromCity, setFromCity] = useState('Bengaluru (BLR)');
   const [toCity, setToCity] = useState('Dubai (DXB)');
@@ -25,8 +27,9 @@ export const FlightTicketingView: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const ref = 'FLIGHT-' + Math.floor(100000 + Math.random() * 900000);
     const enquiry = {
-      referenceId: 'FLIGHT-' + Math.floor(100000 + Math.random() * 900000),
+      referenceId: ref,
       tripType: tripType === 'round-trip' ? 'Round Trip' : 'One Way',
       from: fromCity,
       to: toCity,
@@ -39,6 +42,7 @@ export const FlightTicketingView: React.FC = () => {
       email: customerEmail,
       submittedAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
+    addFlightEnquiry(enquiry);
     setSubmittedEnquiry(enquiry);
   };
 
